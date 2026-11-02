@@ -7,14 +7,12 @@ use Illuminate\Support\Facades\DB;
 
 class BarangController extends Controller
 {
-    // READ: Menampilkan seluruh baris dari tabel 'barang'
     public function index()
     {
         $barang = DB::table('barang')->get();
         return view('barang.index', compact('barang'));
     }
 
-    // CREATE: Menyimpan data baru lewat query INSERT INTO barang
     public function store(Request $request)
     {
         DB::table('barang')->insert([
@@ -27,7 +25,6 @@ class BarangController extends Controller
         return redirect()->back()->with('success', 'Data Master Barang berhasil disimpan!');
     }
 
-    // UPDATE: Mengubah data terpilih lewat kueri UPDATE barang WHERE idbarang = ?
     public function update(Request $request, string $id)
     {
         DB::table('barang')->where('idbarang', $id)->update([
@@ -46,4 +43,21 @@ class BarangController extends Controller
         DB::table('barang')->where('idbarang', $id)->delete();
         return redirect()->back()->with('success', 'Data Master Barang berhasil dihapus!');
     }
+    public function laporanProfit()
+{
+
+    $laporan = DB::select("
+        SELECT
+            idbarang,
+            nama_barang,
+            nama_satuan,
+            harga AS harga_modal,
+            f_hitung_profit_bersih(harga, 10) AS profit_bersih,
+            (harga + f_hitung_profit_bersih(harga, 10)) AS harga_jual_proyeksi
+        FROM v_katalog_barang
+    ");
+
+    return view('barang.profit', compact('laporan'));
+}
+
 }

@@ -11,7 +11,6 @@
     <div class="card shadow-sm">
         <div class="card-header bg-primary text-white d-flex justify-content-between align-items-center">
             <h5 class="mb-0">CUD Master Data Barang</h5>
-            <button class="btn btn-light btn-sm font-weight-bold" data-toggle="modal" data-target="#modalTambah">+ Tambah Barang</button>
         </div>
         <div class="card-body">
             @if(session('success'))
@@ -48,7 +47,6 @@
                         </td>
                     </tr>
 
-                    <!-- MODAL FORM EDIT (UPDATE) -->
                     <div class="modal fade" id="modalEdit{{ $b->idbarang }}" tabindex="-1">
                         <div class="modal-dialog">
                             <form action="{{ route('barang.update', $b->idbarang) }}" method="POST" class="modal-content">
@@ -98,7 +96,6 @@
         </div>
     </div>
 
-    <!-- MODAL FORM TAMBAH (CREATE) -->
     <div class="modal fade" id="modalTambah" tabindex="-1">
         <div class="modal-dialog">
             <form action="{{ route('barang.store') }}" method="POST" class="modal-content">
