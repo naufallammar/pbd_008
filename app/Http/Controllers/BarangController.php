@@ -37,7 +37,6 @@ class BarangController extends Controller
         return redirect()->back()->with('success', 'Data Master Barang berhasil diubah!');
     }
 
-    // DELETE: Menghapus data lewat kueri DELETE FROM barang WHERE idbarang = ?
     public function destroy(string $id)
     {
         DB::table('barang')->where('idbarang', $id)->delete();

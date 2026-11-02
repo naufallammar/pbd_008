@@ -33,7 +33,6 @@ class PenjualanController extends Controller
         DB::beginTransaction();
 
         try {
-            // 1. Jalankan SP untuk membuat header penjualan
             $proses = DB::select("CALL sp_buat_penjualan_baru(?, ?, ?, ?, ?)", [
                 $request->subtotal_nilai,
                 $request->ppn,
@@ -42,19 +41,16 @@ class PenjualanController extends Controller
                 $request->idmargin_penjualan
             ]);
 
-            // PERBAIKAN: Cara mengambil ID hasil dari SP yang lebih aman
             if (is_array($proses) && isset($proses[0])) {
                 $idpenjualan_baru = $proses[0]->id_penjualan_baru ?? null;
             } else {
                 $idpenjualan_baru = $proses->id_penjualan_baru ?? null;
             }
 
-            // Jika gagal mendapatkan ID, lempar error ke blok catch
             if (!$idpenjualan_baru) {
                 throw new \Exception("Gagal mendapatkan ID Penjualan baru dari database.");
             }
 
-            // 2. Loop data keranjang untuk dimasukkan ke tabel detail
             foreach ($request->barang_id as $key => $idbarang) {
                 DB::table('detail_penjualan')->insert([
                     'idpenjualan'  => $idpenjualan_baru,
@@ -72,7 +68,6 @@ class PenjualanController extends Controller
 
         } catch (\Exception $e) {
             DB::rollBack();
-            // Mengembalikan ke halaman kasir sambil membawa pesan error sistem asli
             return redirect()->back()->withInput()->with('error_system', 'Transaksi gagal: ' . $e->getMessage());
         }
     }

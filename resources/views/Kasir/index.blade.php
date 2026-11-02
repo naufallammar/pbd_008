@@ -25,7 +25,6 @@
 <div class="container py-5">
     <a href="{{ route('dashboard') }}" class="btn btn-secondary mb-3 shadow-sm">⬅️ Kembali ke Dashboard</a>
 
-    <!-- PERBAIKAN 1: Form dipindah ke sini agar membungkus seluruh panel transaksi -->
     <form action="{{ route('penjualan.store') }}" method="POST">
         @csrf
         <input type="hidden" name="idmargin_penjualan" value="{{ $marginActive->idmargin_penjualan ?? 1 }}">
@@ -142,7 +141,6 @@
             let rowTotal = harga * qty;
             currentSubtotal += rowTotal;
 
-            // PERBAIKAN 2: Menyisipkan input hidden berformat array [] agar dibaca oleh Laravel
             let newRow = document.createElement('tr');
             newRow.innerHTML = `
                 <td>
