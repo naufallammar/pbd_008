@@ -5,7 +5,6 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Facades\Hash;
 
 class AuthPageController extends Controller
 {
@@ -21,18 +20,19 @@ class AuthPageController extends Controller
             'password' => 'required',
         ]);
 
-        $user = DB::table('user')->where('username', $request->username)->first();
+        $user = DB::selectOne("SELECT * FROM user WHERE username = ?", [$request->username]);
 
         if ($user && $request->password === $user->password) {
 
             Auth::loginUsingId($user->iduser);
 
-            $userDetail = DB::table('v_detail_user')
-                            ->where('iduser', $user->iduser)
-                            ->first();
+            $userDetail = DB::selectOne("SELECT * FROM v_detail_user WHERE iduser = ?", [$user->iduser]);
 
-            session(['nama_role' => $userDetail->nama_role]);
-            session(['username' => $userDetail->username]);
+            session([
+                'iduser'    => $userDetail->iduser,
+                'nama_role' => $userDetail->nama_role,
+                'username'  => $userDetail->username,
+            ]);
 
             return redirect()->route('dashboard')->with('success', 'Selamat datang kembali!');
         }
